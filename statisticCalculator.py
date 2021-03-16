@@ -4,8 +4,11 @@ import matplotlib.pyplot as plt
 
 #loading input file
 print("\n","Data Requirements:", "\n",
-    "1. Your data should be two column data", "\n",
-    "2. Your data should have extension .txt","\n"
+    "1. Your data should be three column data with the same length", "\n",
+    "2. Your data should have extension .txt or .dat","\n",
+    "3. The first column of your data should be the x-axis","\n",
+    "4. The second column of your data should be the y-axis","\n",
+    "5. The third column of your data should be the color bar","\n",
     )
 userInput = input("Enter your input filename with extension (ex: input.txt): ")
 fileInput = np.loadtxt(userInput)
@@ -13,6 +16,7 @@ fileInput = np.loadtxt(userInput)
 #defining
 inputX = np.array(fileInput[:,0])
 inputY = np.array(fileInput[:,1])
+color = np.array(fileInput[:,2])
 
 #length
 lengthX = len(inputX)
@@ -33,8 +37,8 @@ meanX = sumX / lengthX
 meanY = sumY / lengthY
 
 #square of sum
-squareSumX = np.multiply(sumX, sumX)
-squareSumY = np.multiply(sumY, sumY)
+squareSumX = sumX * sumX
+squareSumY = sumY * sumY
 
 #square of each
 squareX = np.multiply(inputX, inputX)
@@ -45,50 +49,30 @@ sumSquareX = np.sum(squareX)
 sumSquareY = np.sum(squareY)
 
 #root mean square
-rmsX = mt.sqrt((sumSquareX / lengthX))
-rmsY = mt.sqrt((sumSquareY / lengthY))
+rmsX = sumSquareX / lengthX
+rmsY = sumSquareY / lengthY
 
 #variance
-varX1 = np.subtract(inputX, meanX)
-varX2 = np.multiply(varX1, varX1)
-varX3 = np.sum(varX2)
-varX = varX3 / (lengthX - 1)
-
-varY1 = np.subtract(inputY, meanY)
-varY2 = np.multiply(varY1, varY1)
-varY3 = np.sum(varY2)
-varY = varY3 / (lengthY - 1)
+varX = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX)))) / (lengthX - 1)
+varY = (np.sum(np.multiply(np.subtract(inputY, meanY), np.subtract(inputY, meanY)))) / (lengthY - 1)
 
 #standard deviation
 sX = mt.sqrt(varX)
 sY = mt.sqrt(varY)
 
 #covariance
-cov1 = np.multiply(varX1, varY1)
-cov2 = np.sum(cov1)
-cov = cov2 / (lengthX - 1)
+cov = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputY, meanY)))) / (lengthX - 1)
 
 #pearson product-moment correlation coefficient
-r1 = np.multiply(sumX, sumY)
-r2 = np.multiply(lengthX, sumInputXY)
-r3 = np.subtract(r2, r1)
-r4 = np.multiply(sumSquareX, lengthX)
-r5 = np.multiply(sumSquareY, lengthY)
-r6 = np.subtract(r4, squareSumX)
-r7 = np.subtract(r5, squareSumY)
-r8 = np.multiply(r6, r7)
-r9 = mt.sqrt(r8)
-r = r3 / r9
+r = (np.subtract((lengthX * sumInputXY), (sumX * sumY))) / (mt.sqrt(((sumSquareX * lengthX) - squareSumX) * ((sumSquareY * lengthY) - squareSumY)))
 
 #determination coefficient
-r2 = np.multiply(r, r)
+r2 = r * r
 
 #linear regression
-b = cov2 / varX3
+b = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputY, meanY)))) / (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX))))
 
-a1 = np.multiply(b, sumX)
-a2 = np.subtract(sumY, a1)
-a = a2 / lengthX
+a = (sumY - (b * sumX)) / lengthX
 
 bEq = ""
 aEq = ""
@@ -113,8 +97,7 @@ else :
 
 eq = "Y = " + bEq + " " + aEq
 
-plotY1 = np.multiply(b, inputX)
-plotY = np.add(plotY1, a)
+plotY = np.add(np.multiply(b, inputX), a)
 
 #displaying data
 print("\n", "The Input X:", "\n", inputX)
@@ -147,16 +130,46 @@ print("\n", "The Intercept of Linear Regression Line:", "\n", a)
 print("\n", "The Linear Regression Equation:", "\n", eq)
 
 #ploting data
-plt.plot(inputX, inputY, "o", label = "Data", ms = "10", mec = "midnightblue", mfc = "dodgerblue")
-plt.plot(inputX, plotY, ls = "-", label = "Regression Line", color = "#1D1D1D", linewidth = "2")
-plt.legend(loc="upper right")
+print("\n")
+xLabel = input("Enter the label of X-axis for the linear regression plot: ")
+yLabel = input("Enter the label of Y-axis for the linear regression plot: ")
+cLabel = input("Enter the label of color bar for the linear regression plot: ")
+print("\n")
+
+if b == 1 :
+    bEqL = "X"
+elif b == 0 :
+    bEqL = ""
+elif b == -1 :
+    bEqL = "- X"
+else :
+    bEqL = str(np.around(b, 3)) + "X"
+
+if a > 0 :
+    aEqL = "+" + " " + str(np.around(a, 3))
+elif a == 0 :
+    aEqL = ""
+elif a < 0 :
+    aEqL = "-" + " " + str(np.around(abs(a), 3))
+else :
+    aEqL = str(np.around(a, 3))
+
+eqL = "Y = " + bEqL + " " + aEqL
+
+plt.scatter(inputX, inputY, c = color, cmap = "terrain")
+plt.plot(inputX, plotY, ls = "-", label = eqL, color = "#1D1D1D", linewidth = "1")
+
+plt.legend(loc="lower right")
 
 plt.grid()
 
 font1 = {"family":"serif","color":"#1D1D1D","size":20}
 font2 = {"family":"serif","color":"#1D1D1D","size":15}
 
-plt.xlabel("The Input X", fontdict = font2)
-plt.ylabel("The Input Y", fontdict = font2)
-plt.title("Linear Regression Plot", fontdict = font1)
+plt.colorbar().ax.set_ylabel(cLabel, fontdict = font2)
+
+plt.xlabel(xLabel, fontdict = font2)
+plt.ylabel(yLabel, fontdict = font2)
+plt.title("Linear Regression Plot, r = " + str(np.around(r, 3)), fontdict = font1)
+
 plt.show()
