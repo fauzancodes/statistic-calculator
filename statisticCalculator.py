@@ -1,26 +1,38 @@
 import math as mt
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats as sts
 
 #loading input file
 print("\n","Data Requirements:", "\n",
     "1. Your data should be three column data with the same length", "\n",
-    "2. Your data should have extension .txt or .dat","\n",
-    "3. The first column of your data should be the x-axis","\n",
-    "4. The second column of your data should be the y-axis","\n",
-    "5. The third column of your data should be the color bar","\n",
+    "2. One column for X-axis, one column for Y-axis, one column for color bar","\n",
+    "3. Your data should have extension .txt or .dat","\n"
     )
+
 userInput = input("Enter your input filename with extension (ex: input.txt): ")
+columnX = input("The data for the X-axis are in column (ex: 1 or 2 or etc.): ")
+columnY = input("The data for the Y-axis are in column (ex: 1 or 2 or etc.): ")
+columnColorbar = input("The data for the color bar are in column (ex: 1 or 2 or etc.): ")
+
 fileInput = np.loadtxt(userInput)
 
 #defining
-inputX = np.array(fileInput[:,0])
-inputY = np.array(fileInput[:,1])
-color = np.array(fileInput[:,2])
+inputX = np.array(fileInput[:, (int(columnX) - 1)])
+inputY = np.array(fileInput[:, (int(columnY) - 1)])
+colorbar = np.array(fileInput[:, (int(columnColorbar) - 1)])
 
 #length
 lengthX = len(inputX)
 lengthY = len(inputY)
+
+#median
+medianX = np.median(inputX)
+medianY = np.median(inputY)
+
+#mode
+modeX = sts.mode(inputX)
+modeY = sts.mode(inputY)
 
 #sum
 sumX = np.sum(inputX)
@@ -33,8 +45,8 @@ inputXY = np.multiply(inputX, inputY)
 sumInputXY = np.sum(inputXY)
 
 #mean
-meanX = sumX / lengthX
-meanY = sumY / lengthY
+meanX = sumX / lengthX #meanX = np.mean(inputX)
+meanY = sumY / lengthY #meanY = np.mean(inputY)
 
 #square of sum
 squareSumX = sumX * sumX
@@ -53,12 +65,12 @@ rmsX = sumSquareX / lengthX
 rmsY = sumSquareY / lengthY
 
 #variance
-varX = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX)))) / (lengthX - 1)
-varY = (np.sum(np.multiply(np.subtract(inputY, meanY), np.subtract(inputY, meanY)))) / (lengthY - 1)
+varX = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX)))) / (lengthX - 1) #varX = np.var(inputX)
+varY = (np.sum(np.multiply(np.subtract(inputY, meanY), np.subtract(inputY, meanY)))) / (lengthY - 1) #varY = np.var(inputY)
 
 #standard deviation
-sX = mt.sqrt(varX)
-sY = mt.sqrt(varY)
+sX = mt.sqrt(varX) #sX = np.std(inputX)
+sY = mt.sqrt(varY) #sY = np.std(inputY)
 
 #covariance
 cov = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputY, meanY)))) / (lengthX - 1)
@@ -99,11 +111,29 @@ eq = "Y = " + bEq + " " + aEq
 
 plotY = np.add(np.multiply(b, inputX), a)
 
+#simple script for linear regression
+"""
+slope, intercept, r, p, std_err = stats.linregress(inputX, inputY)
+
+def myfunc(x):
+  return slope * x + intercept
+
+mymodel = list(map(myfunc, inputX))
+
+plt.scatter(inputX, inputY)
+plt.plot(inputX, mymodel)
+plt.show()
+"""
+
 #displaying data
 print("\n", "The Input X:", "\n", inputX)
 print("\n", "The Input Y:", "\n", inputY)
 print("\n", "The Length of X:", "\n", lengthX)
 print("\n", "The Length of Y:", "\n", lengthY)
+print("\n", "The Median of X:", "\n", medianX)
+print("\n", "The Median of Y:", "\n", medianY)
+print("\n", "The Mode of X:", "\n", modeX)
+print("\n", "The Mode of Y:", "\n", modeY)
 print("\n", "The Sum of X:", "\n", sumX)
 print("\n", "The Sum of Y:", "\n", sumY)
 print("\n", "The XY:", "\n", inputXY)
@@ -156,7 +186,7 @@ else :
 
 eqL = "Y = " + bEqL + " " + aEqL
 
-plt.scatter(inputX, inputY, c = color, cmap = "terrain")
+plt.scatter(inputX, inputY, c = colorbar, cmap = "rainbow")
 plt.plot(inputX, plotY, ls = "-", label = eqL, color = "#1D1D1D", linewidth = "1")
 
 plt.legend(loc="lower right")
