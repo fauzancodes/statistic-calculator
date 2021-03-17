@@ -5,8 +5,8 @@ from scipy import stats as sts
 
 #loading input file
 print("\n","Data Requirements:", "\n",
-    "1. Your data should be three column data with the same length", "\n",
-    "2. One column for X-axis, one column for Y-axis, one column for color bar","\n",
+    "1. Your data should be columned data with the same length, it's up to you how many column", "\n",
+    "2. We just need three columns, one column for X-axis, one column for Y-axis, one column for color bar","\n",
     "3. Your data should have extension .txt or .dat","\n"
     )
 
