@@ -5,8 +5,8 @@ from scipy import stats as sts
 
 #loading input file
 print("\n","Data Requirements:", "\n",
-    "1. Your data should be columned data with the same length, it's up to you how many column", "\n",
-    "2. We just need three columns, one column for X-axis, one column for Y-axis, one column for color bar","\n",
+    "1. Your data should have at least 3 column with the same length", "\n",
+    "2. One column for X-axis, one column for Y-axis, one column for color bar","\n",
     "3. Your data should have extension .txt or .dat","\n"
     )
 
@@ -113,7 +113,7 @@ plotY = np.add(np.multiply(b, inputX), a)
 
 #simple script for linear regression
 """
-slope, intercept, r, p, std_err = stats.linregress(inputX, inputY)
+slope, intercept, r, p, std_err = sts.linregress(inputX, inputY)
 
 def myfunc(x):
   return slope * x + intercept
@@ -173,16 +173,16 @@ elif b == 0 :
 elif b == -1 :
     bEqL = "- X"
 else :
-    bEqL = str(np.around(b, 3)) + "X"
+    bEqL = str(np.around(b, 5)) + "X"
 
 if a > 0 :
-    aEqL = "+" + " " + str(np.around(a, 3))
+    aEqL = "+" + " " + str(np.around(a, 5))
 elif a == 0 :
     aEqL = ""
 elif a < 0 :
-    aEqL = "-" + " " + str(np.around(abs(a), 3))
+    aEqL = "-" + " " + str(np.around(abs(a), 5))
 else :
-    aEqL = str(np.around(a, 3))
+    aEqL = str(np.around(a, 5))
 
 eqL = "Y = " + bEqL + " " + aEqL
 
