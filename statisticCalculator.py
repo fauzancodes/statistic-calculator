@@ -2,7 +2,10 @@ import math as mt
 import statistics as sts
 import numpy as np
 import scipy.stats as scs
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
 import matplotlib.pyplot as plt
+import pandas as pd
 
 #loading input file
 print("\n","Data Requirements:", "\n",
@@ -113,16 +116,29 @@ r2 = r * r
 
 #linear regression
 """
+#pure python
 b = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputY, meanY)))) / (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX))))
 
 a = (sumY - (b * sumX)) / lengthX
 """
-
+"""
+#scipy
 slope, intercept, r, p, stderr = scs.linregress(inputX, inputY)
 
 b = slope
 
 a = intercept
+
+modelY = np.add(np.multiply(b, inputX), a)
+"""
+#scikit-learn
+model = LinearRegression().fit(inputX.reshape(-1, 1), inputY)
+
+a = model.intercept_
+
+b = model.coef_[0]
+
+modelY = model.predict(inputX.reshape(-1, 1))
 
 bEq = ""
 aEq = ""
@@ -142,10 +158,113 @@ elif a == 0 :
     aEq = ""
 elif a < 0 :
     aEq = "-" + " " + str(np.around(abs(a), 5))
-else :
-    aEq = str(np.around(a, 5))
 
 eq = "Y = " + bEq + " " + aEq
+
+#polynomial degree 2 regression
+inputX_ = PolynomialFeatures(degree = 2, include_bias = False).fit_transform(inputX.reshape(-1, 1))
+
+modelPoly = LinearRegression().fit(inputX_, inputY)
+
+aPoly = modelPoly.intercept_
+
+bPoly = modelPoly.coef_
+bPoly1 = bPoly[0]
+bPoly2 = bPoly[1]
+
+modelPolyY = modelPoly.predict(inputX_)
+
+bPoly1Eq = ""
+bPoly2Eq = ""
+aEq = ""
+
+if bPoly1 == 1 :
+    bPoly1Eq = "X\u00b2"
+elif bPoly1 == 0 :
+    bPoly1Eq = ""
+elif bPoly1 == -1 :
+    bPoly1Eq = "- X\u00b2"
+else :
+    bPoly1Eq = str(np.around(bPoly1, 5)) + "X\u00b2"
+
+if bPoly2 == 1 :
+    bPoly2Eq = "+ X"
+elif bPoly2 == 0 :
+    bPoly2Eq = ""
+elif bPoly2 == -1 :
+    bPoly2Eq = "- X"
+elif bPoly2 > 0 :
+    bPoly2Eq = "+" + " " + str(np.around(bPoly2, 5)) + "X"
+elif bPoly2 < 0 :
+    bPoly2Eq = "-" + " " + str(np.around(abs(bPoly2), 5)) + "X"
+
+if aPoly > 0 :
+    aPolyEq = "+" + " " + str(np.around(aPoly, 5))
+elif aPoly == 0 :
+    aPolyEq = ""
+elif aPoly < 0 :
+    aPolyEq = "-" + " " + str(np.around(abs(aPoly), 5))
+
+eqPoly = "Y = " + bPoly1Eq + " " + bPoly2Eq + " " + aPolyEq
+
+#polynomial degree 3 regression
+inputX_3 = PolynomialFeatures(degree = 3, include_bias = False).fit_transform(inputX.reshape(-1, 1))
+
+model3Poly = LinearRegression().fit(inputX_3, inputY)
+
+a3Poly = model3Poly.intercept_
+
+b3Poly = model3Poly.coef_
+b3Poly1 = b3Poly[0]
+b3Poly2 = b3Poly[1]
+b3Poly3 = b3Poly[2]
+
+model3PolyY = model3Poly.predict(inputX_3)
+
+b3Poly1Eq = ""
+b3Poly2Eq = ""
+b3Poly3Eq = ""
+a3Eq = ""
+
+if b3Poly1 == 1 :
+    b3Poly1Eq = "X\u00b3"
+elif b3Poly1 == 0 :
+    b3Poly1Eq = ""
+elif b3Poly1 == -1 :
+    b3Poly1Eq = "- X\u00b3"
+else :
+    b3Poly1Eq = str(np.around(b3Poly1, 5)) + "X\u00b3"
+
+if b3Poly2 == 1 :
+    b3Poly2Eq = "+ X\u00b2"
+elif b3Poly2 == 0 :
+    b3Poly2Eq = ""
+elif b3Poly2 == -1 :
+    b3Poly2Eq = "- X\u00b2"
+elif b3Poly2 > 0 :
+    b3Poly2Eq = "+" + " " + str(np.around(b3Poly2, 5)) + "X\u00b2"
+elif b3Poly2 < 0 :
+    b3Poly2Eq = "-" + " " + str(np.around(abs(b3Poly2), 5)) + "X\u00b2"
+
+if b3Poly3 == 1 :
+    b3Poly3Eq = "+ X"
+elif b3Poly3 == 0 :
+    b3Poly3Eq = ""
+elif b3Poly3 == -1 :
+    b3Poly3Eq = "- X"
+elif b3Poly3 > 0 :
+    b3Poly3Eq = "+" + " " + str(np.around(b3Poly3, 5)) + "X"
+elif b3Poly3 < 0 :
+    b3Poly3Eq = "-" + " " + str(np.around(abs(b3Poly3), 5)) + "X"
+
+if a3Poly > 0 :
+    a3PolyEq = "+" + " " + str(np.around(a3Poly, 5))
+elif a3Poly == 0 :
+    a3PolyEq = ""
+elif a3Poly < 0 :
+    a3PolyEq = "-" + " " + str(np.around(abs(a3Poly), 5))
+
+eq3Poly = "Y = " + b3Poly1Eq + " " + b3Poly2Eq + " " + b3Poly3Eq + " " + a3PolyEq
 
 #displaying data
 print("\n", "The Input X:", "\n", inputX)
@@ -188,6 +307,12 @@ print("\n", "The Determination Coefficient:", "\n", r2)
 print("\n", "The Slope of Linear Regression Line:", "\n", b)
 print("\n", "The Intercept of Linear Regression Line:", "\n", a)
 print("\n", "The Linear Regression Equation:", "\n", eq)
+print("\n", "The Slope of Polynomial Regression Line Degree 2:", "\n", bPoly1, "and", bPoly2)
+print("\n", "The Intercept of Polynomial Regression Line Degree 2", "\n", aPoly)
+print("\n", "The Polynomial Regression Degree 2 Equation:", "\n", eqPoly)
+print("\n", "The Slope of Polynomial Regression Line Degree 3:", "\n", b3Poly1, ",", b3Poly2, "and", b3Poly3)
+print("\n", "The Intercept of Polynomial Regression Line Degree 3", "\n", a3Poly)
+print("\n", "The Polynomial Regression Degree 3 Equation:", "\n", eq3Poly)
 
 #ploting data
 print("\n")
@@ -196,10 +321,15 @@ yLabel = input("Enter the label of Y-axis for the linear regression plot: ")
 cLabel = input("Enter the label of color bar for the linear regression plot: ")
 print("\n")
 
-plotY = np.add(np.multiply(b, inputX), a)
-
 plt.scatter(inputX, inputY, c = colorbar, cmap = "rainbow")
-plt.plot(inputX, plotY, ls = "-", label = eq, color = "#1D1D1D", linewidth = "1")
+
+modelYSort = pd.Series(data = modelY, index = inputX).sort_index().tolist()
+modelPolyYSort = pd.Series(data = modelPolyY, index = inputX).sort_index().tolist()
+model3PolyYSort = pd.Series(data = model3PolyY, index = inputX).sort_index().tolist()
+
+plt.plot(np.sort(inputX), modelYSort, ls = "-", label = eq, color = "crimson", linewidth = "2")
+plt.plot(np.sort(inputX), modelPolyYSort, ls = "-", label = eqPoly, color = "midnightblue", linewidth = "2")
+plt.plot(np.sort(inputX), model3PolyYSort, ls = "-", label = eq3Poly, color = "forestgreen", linewidth = "2")
 
 plt.legend(loc="lower right")
 
