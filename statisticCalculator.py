@@ -177,7 +177,7 @@ modelPolyY = modelPoly.predict(modelX_)
 
 bPoly1Eq = ""
 bPoly2Eq = ""
-aEq = ""
+aPolyEq = ""
 
 if np.around(bPoly1, 5) == 1 :
     bPoly1Eq = "X\u00b2"
@@ -226,7 +226,7 @@ model3PolyY = model3Poly.predict(modelX_3)
 b3Poly1Eq = ""
 b3Poly2Eq = ""
 b3Poly3Eq = ""
-a3Eq = ""
+a3PolyEq = ""
 
 if np.around(b3Poly1, 5) == 1 :
     b3Poly1Eq = "X\u00b3"
