@@ -5,7 +5,6 @@ import scipy.stats as scs
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 import matplotlib.pyplot as plt
-import pandas as pd
 
 #loading input file
 print("\n","Data Requirements:", "\n",
@@ -138,25 +137,26 @@ a = model.intercept_
 
 b = model.coef_[0]
 
-modelY = model.predict(inputX.reshape(-1, 1))
+modelX = np.arange((min(inputX)), (max(inputX)), (len(((min(inputX)), (max(inputX)))) / 100))
+modelY = model.predict(modelX.reshape(-1, 1))
 
 bEq = ""
 aEq = ""
 
-if b == 1 :
+if np.around(b, 5) == 1 :
     bEq = "X"
-elif b == 0 :
+elif np.around(b, 5) == 0 :
     bEq = ""
-elif b == -1 :
+elif np.around(b, 5) == -1 :
     bEq = "- X"
 else :
     bEq = str(np.around(b, 5)) + "X"
 
-if a > 0 :
+if np.around(a, 5) > 0 :
     aEq = "+" + " " + str(np.around(a, 5))
-elif a == 0 :
+elif np.around(a, 5) == 0 :
     aEq = ""
-elif a < 0 :
+elif np.around(a, 5) < 0 :
     aEq = "-" + " " + str(np.around(abs(a), 5))
 
 eq = "Y = " + bEq + " " + aEq
@@ -172,37 +172,38 @@ bPoly = modelPoly.coef_
 bPoly1 = bPoly[0]
 bPoly2 = bPoly[1]
 
-modelPolyY = modelPoly.predict(inputX_)
+modelX_ = PolynomialFeatures(degree = 2, include_bias = False).fit_transform(modelX.reshape(-1, 1))
+modelPolyY = modelPoly.predict(modelX_)
 
 bPoly1Eq = ""
 bPoly2Eq = ""
 aEq = ""
 
-if bPoly1 == 1 :
+if np.around(bPoly1, 5) == 1 :
     bPoly1Eq = "X\u00b2"
-elif bPoly1 == 0 :
+elif np.around(bPoly1, 5) == 0 :
     bPoly1Eq = ""
-elif bPoly1 == -1 :
+elif np.around(bPoly1, 5) == -1 :
     bPoly1Eq = "- X\u00b2"
 else :
     bPoly1Eq = str(np.around(bPoly1, 5)) + "X\u00b2"
 
-if bPoly2 == 1 :
+if np.around(bPoly2, 5) == 1 :
     bPoly2Eq = "+ X"
-elif bPoly2 == 0 :
+elif np.around(bPoly2, 5) == 0 :
     bPoly2Eq = ""
-elif bPoly2 == -1 :
+elif np.around(bPoly2, 5) == -1 :
     bPoly2Eq = "- X"
-elif bPoly2 > 0 :
+elif np.around(bPoly2, 5) > 0 :
     bPoly2Eq = "+" + " " + str(np.around(bPoly2, 5)) + "X"
-elif bPoly2 < 0 :
+elif np.around(bPoly2, 5) < 0 :
     bPoly2Eq = "-" + " " + str(np.around(abs(bPoly2), 5)) + "X"
 
-if aPoly > 0 :
+if np.around(aPoly, 5) > 0 :
     aPolyEq = "+" + " " + str(np.around(aPoly, 5))
-elif aPoly == 0 :
+elif np.around(aPoly, 5) == 0 :
     aPolyEq = ""
-elif aPoly < 0 :
+elif np.around(aPoly, 5) < 0 :
     aPolyEq = "-" + " " + str(np.around(abs(aPoly), 5))
 
 eqPoly = "Y = " + bPoly1Eq + " " + bPoly2Eq + " " + aPolyEq
@@ -219,49 +220,50 @@ b3Poly1 = b3Poly[0]
 b3Poly2 = b3Poly[1]
 b3Poly3 = b3Poly[2]
 
-model3PolyY = model3Poly.predict(inputX_3)
+modelX_3 = PolynomialFeatures(degree = 3, include_bias = False).fit_transform(modelX.reshape(-1, 1))
+model3PolyY = model3Poly.predict(modelX_3)
 
 b3Poly1Eq = ""
 b3Poly2Eq = ""
 b3Poly3Eq = ""
 a3Eq = ""
 
-if b3Poly1 == 1 :
+if np.around(b3Poly1, 5) == 1 :
     b3Poly1Eq = "X\u00b3"
-elif b3Poly1 == 0 :
+elif np.around(b3Poly1, 5) == 0 :
     b3Poly1Eq = ""
-elif b3Poly1 == -1 :
+elif np.around(b3Poly1, 5) == -1 :
     b3Poly1Eq = "- X\u00b3"
 else :
     b3Poly1Eq = str(np.around(b3Poly1, 5)) + "X\u00b3"
 
-if b3Poly2 == 1 :
+if np.around(b3Poly2, 5) == 1 :
     b3Poly2Eq = "+ X\u00b2"
-elif b3Poly2 == 0 :
+elif np.around(b3Poly2, 5) == 0 :
     b3Poly2Eq = ""
-elif b3Poly2 == -1 :
+elif np.around(b3Poly2, 5) == -1 :
     b3Poly2Eq = "- X\u00b2"
-elif b3Poly2 > 0 :
+elif np.around(b3Poly2, 5) > 0 :
     b3Poly2Eq = "+" + " " + str(np.around(b3Poly2, 5)) + "X\u00b2"
-elif b3Poly2 < 0 :
+elif np.around(b3Poly2, 5) < 0 :
     b3Poly2Eq = "-" + " " + str(np.around(abs(b3Poly2), 5)) + "X\u00b2"
 
-if b3Poly3 == 1 :
+if np.around(b3Poly3, 5) == 1 :
     b3Poly3Eq = "+ X"
-elif b3Poly3 == 0 :
+elif np.around(b3Poly3, 5) == 0 :
     b3Poly3Eq = ""
-elif b3Poly3 == -1 :
+elif np.around(b3Poly3, 5) == -1 :
     b3Poly3Eq = "- X"
-elif b3Poly3 > 0 :
+elif np.around(b3Poly3, 5) > 0 :
     b3Poly3Eq = "+" + " " + str(np.around(b3Poly3, 5)) + "X"
-elif b3Poly3 < 0 :
+elif np.around(b3Poly3, 5) < 0 :
     b3Poly3Eq = "-" + " " + str(np.around(abs(b3Poly3), 5)) + "X"
 
-if a3Poly > 0 :
+if np.around(a3Poly, 5) > 0 :
     a3PolyEq = "+" + " " + str(np.around(a3Poly, 5))
-elif a3Poly == 0 :
+elif np.around(a3Poly, 5) == 0 :
     a3PolyEq = ""
-elif a3Poly < 0 :
+elif np.around(a3Poly, 5) < 0 :
     a3PolyEq = "-" + " " + str(np.around(abs(a3Poly), 5))
 
 eq3Poly = "Y = " + b3Poly1Eq + " " + b3Poly2Eq + " " + b3Poly3Eq + " " + a3PolyEq
@@ -323,13 +325,9 @@ print("\n")
 
 plt.scatter(inputX, inputY, c = colorbar, cmap = "rainbow")
 
-modelYSort = pd.Series(data = modelY, index = inputX).sort_index().tolist()
-modelPolyYSort = pd.Series(data = modelPolyY, index = inputX).sort_index().tolist()
-model3PolyYSort = pd.Series(data = model3PolyY, index = inputX).sort_index().tolist()
-
-plt.plot(np.sort(inputX), modelYSort, ls = "-", label = eq, color = "crimson", linewidth = "2")
-plt.plot(np.sort(inputX), modelPolyYSort, ls = "-", label = eqPoly, color = "midnightblue", linewidth = "2")
-plt.plot(np.sort(inputX), model3PolyYSort, ls = "-", label = eq3Poly, color = "forestgreen", linewidth = "2")
+plt.plot(modelX, modelY, ls = "-", label = eq, color = "crimson", linewidth = "2")
+plt.plot(modelX, modelPolyY, ls = "-", label = eqPoly, color = "midnightblue", linewidth = "2")
+plt.plot(modelX, model3PolyY, ls = "-", label = eq3Poly, color = "forestgreen", linewidth = "2")
 
 plt.legend(loc="lower right")
 
