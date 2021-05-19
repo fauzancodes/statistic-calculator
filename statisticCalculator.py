@@ -74,8 +74,8 @@ sumSquareX = np.sum(squareX)
 sumSquareY = np.sum(squareY)
 
 #root mean square
-rmsX = sumSquareX / lengthX
-rmsY = sumSquareY / lengthY
+rmsX = mt.sqrt(sumSquareX / lengthX)
+rmsY = mt.sqrt(sumSquareY / lengthY)
 
 #variance
 varX = np.var(inputX, ddof = 1) #varX = sts.variance(inputX) #varX = (np.sum(np.multiply(np.subtract(inputX, meanX), np.subtract(inputX, meanX)))) / (lengthX - 1)
